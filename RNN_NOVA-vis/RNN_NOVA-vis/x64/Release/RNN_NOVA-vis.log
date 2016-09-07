@@ -1,0 +1,21 @@
+﻿Build started 9/7/2016 5:30:40 PM.
+     1>Project "C:\Users\osuoa\Documents\Visual Studio 2015\Projects\RNN_NOVA-vis\RNN_NOVA-vis\RNN_NOVA-vis.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\osuoa\Documents\Visual Studio 2015\Projects\RNN_NOVA-vis\x64\Release\RNN_NOVA-vis.exe" /INCREMENTAL:NO /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\osuoa\Documents\Visual Studio 2015\Projects\RNN_NOVA-vis\x64\Release\RNN_NOVA-vis.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"Main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X64 x64\Release\MyForm.obj
+         x64\Release\sigmoid.obj
+         x64\Release\softmax.obj
+         x64\Release\tanh.obj
+         x64\Release\lstm.obj
+         x64\Release\gradient_checking.obj
+         x64\Release\lstm_block.obj
+         x64\Release\mult_mat_vec.obj
+         x64\Release\mult_tranpose_mat_vec.obj
+         x64\Release\adagrad.obj
+         x64\Release\update_weights.obj
+         "x64\Release\.NETFramework,Version=v4.5.2.AssemblyAttributes.obj"
+         RNN_NOVA-vis.vcxproj -> C:\Users\osuoa\Documents\Visual Studio 2015\Projects\RNN_NOVA-vis\x64\Release\RNN_NOVA-vis.exe
+     1>Done Building Project "C:\Users\osuoa\Documents\Visual Studio 2015\Projects\RNN_NOVA-vis\RNN_NOVA-vis\RNN_NOVA-vis.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.03
