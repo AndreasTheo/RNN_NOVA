@@ -116,7 +116,4 @@
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="temp.hlsl" />
-  </ItemGroup>
 </Project>

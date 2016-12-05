@@ -1,7 +1,8 @@
 #pragma once
 //#include "../../stdafx.h"
 //#include <iomanip>
-#include <unordered_map>;
+#include <stdexcept>
+#include <unordered_map>
 #include "..\Loss_Functions\mse.h"
 #include "..\Loss_Functions\cross_entropy.h"
 #include "..\Activation_Functions\softmax.h"
@@ -9,24 +10,57 @@
 #include "..\Activation_Functions\tanh.h"
 #include "..\Math\gradient_checking.h"
 #include "..\networkparameters.h"
-
+#include <cmath>
 #ifndef LFDIRECTORY_HEADER
 #define LFDIRECTORY_HEADER
 
 using namespace std;
 
-const static std::unordered_map<std::string, int> string_to_case_LF{
+bool gradCheck = 0;
+
+const static std::unordered_map<std::string, int> string_to_case_LF {
 	{ "mse",1 },
 	{ "crossentropy",2 },
 	{ "exponential",3 }
 };
 
+double LF(double* yV, const int aSize, double* targetV, std::string* lF_Type, std::string* prevAF_Type, bool regularize) {
+	double error;
+	switch (string_to_case_LF.at(*lF_Type)) {
+	case 1:
+	{
+		error = MSE_Cost(yV, targetV, aSize);
+	}
+	break;
+	case 2:
+	{
+		if (*prevAF_Type == "softmax") //multiclass
+		{
+			error = CrossEntropy_Multiclass_Cost(yV, targetV, aSize);
+		}
+		else
+		{
+			error = CrossEntropy_Binary_Cost(yV, targetV, aSize);
+		}
+	}
+	break;
+	}
 
-void LF(double* gradV, double* yV, const int aSize, double* targetV, std::string* lF_Type, std::string* prevAF_Type, bool regularize)
-{
+	error = error / (aSize - 1);
+	if (error > 0)
+	{
+		error = sqrt(error);
+	}
+	else
+	{
+		error = sqrt(-error);
+	}
+	return error;
+}
+
+void LFtoYDeriv(double* gradV, double* yV, const int aSize, double* targetV, std::string* lF_Type, std::string* prevAF_Type, bool regularize) {
 
 	double* yDeriv = new double[aSize]; //Activation Function Derivative
-	
 
 	//regularization
 	if (regularize)
@@ -85,14 +119,19 @@ void LF(double* gradV, double* yV, const int aSize, double* targetV, std::string
 			yDeriv = TanhDerivVecFunc(yV, aSize);
 			CrossEntropy_Binary_DerivToYGRAD(gradV, yV, yDeriv, aSize, targetV);
 		}
-		else if (*prevAF_Type == "softmax") //multiclass
+		else if (*prevAF_Type == "softmax" && (aSize>2)) //multiclass
 		{
 			yDeriv = SoftmaxDerivVecFunc(yV, aSize);
 			CrossEntropy_Multiclass_DerivToYGRAD(gradV, yV, yDeriv, aSize, targetV);
 		}
+		else if (*prevAF_Type == "softmax") //multiclass
+		{
+			cout << "Softmax Multiclass requires more than one net output";
+			throw std::exception("Softmax Multiclass requires more than one net output");
+		}
 		else
 		{
-			//error
+			throw std::exception();
 		}
 
 		#if defined(GRADCHECKING_HEADER) 
@@ -135,7 +174,6 @@ void LF(double* gradV, double* yV, const int aSize, double* targetV, std::string
 	}
 	break;
 	}
-
 
 }
 
