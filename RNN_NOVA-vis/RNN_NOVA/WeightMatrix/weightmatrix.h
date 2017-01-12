@@ -14,45 +14,15 @@ template<class T>
 class WeightMatrix {
 
 public:
-	//||DEFAULTS||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	//||DEFAULTS||
 	WeightMatrix<T>(const WeightMatrix&) = default;               // copy constructor
 	WeightMatrix<T>(WeightMatrix&&) = default;                     // move constructor
 	WeightMatrix<T>& operator=(const WeightMatrix&) & = default;  // copy assignment operator
 	WeightMatrix<T>& operator=(WeightMatrix&&) & = default;       // move assignment operator
-	virtual ~WeightMatrix<T>() {
-		try {
-			if (_dataP)
-			{
-				_aligned_free(_dataP);
-			}
-			if (_dataP_dWCache)
-			{
-				_aligned_free(_dataP_dWCache);
-			}
-			if (_dataP_Combo)
-			{
-				_aligned_free(_dataP_Combo);
-			}
-			if (_dataPT)
-			{
-				_aligned_free(_dataPT);
-			}
-		}
-		catch (int err) {
-			cerr << "Failed to deconstruct weightmatrixes \n";
-			cerr << err << '\n';
-		}
-
-	} // destructor
+	virtual ~WeightMatrix<T>(); // destructor
 	WeightMatrix<T>(const int, const int); // constructor
-	WeightMatrix<T>();
-	//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	WeightMatrix<T>(); // constructor
 
-	int size() const { return _rows * _cols; }
-	int rows() const { return _rows; }
-	int cols() const { return _cols; }
-	int rowsPadded() const { return _rowsPadded; }
-	int colsPadded() const { return _colsPadded; }
 
 	//Matrix Initialization Function
 	void InitMatrix(const intptr_t r, const intptr_t c)
@@ -121,12 +91,15 @@ public:
 	//Weight Initialization Functions
 	void RandomizeWeights(const double* min, const double* max);
 	void FillWithConstants(const double* constant);
-	//void Name(std::string n) { name = n; }
 
 	//Data Access Functions
 	T& operator()(const int r, const  int c);
 	T operator()(const int r, const  int c) const;
-	void PrintMatrix();
+	int size() const { return _rows * _cols; }
+	int rows() const { return _rows; }
+	int cols() const { return _cols; }
+	int rowsPadded() const { return _rowsPadded; }
+	int colsPadded() const { return _colsPadded; }
 
 	//Calculation Functions
 	void unrollOrganizer(const intptr_t* r, const intptr_t* c, const intptr_t unrollAmount);
@@ -137,7 +110,9 @@ public:
 	void Update_Weights(const int* layerSize);
 	double ClipGradient(double value);
 
-	//storage and info
+	//Infomative Functions
+	void PrintMatrix();
+	//void Name(std::string n) { name = n; }
 
 private:
 	T* _dataP; //weight matrix
@@ -174,9 +149,10 @@ inline T WeightMatrix<T>::operator()(const int r, const int c) const {
 
 /*
 ========================================================================
-//Constructor
+//Constructor(s) & Destructor
 ========================================================================
 */
+
 template<class T>
 WeightMatrix<T>::WeightMatrix() {
 }
@@ -184,7 +160,31 @@ template<class T>
 WeightMatrix<T>::WeightMatrix(const int r, const int c) {
 	InitMatrix(r, c);
 }
-
+template<class T>
+WeightMatrix<T>::~WeightMatrix() {
+	try {
+		if (_dataP)
+		{
+			_aligned_free(_dataP);
+		}
+		if (_dataP_dWCache)
+		{
+			_aligned_free(_dataP_dWCache);
+		}
+		if (_dataP_Combo)
+		{
+			_aligned_free(_dataP_Combo);
+		}
+		if (_dataPT)
+		{
+			_aligned_free(_dataPT);
+		}
+	}
+	catch (int err) {
+		cerr << "Failed to deconstruct weightmatrixes \n";
+		cerr << err << '\n';
+	}
+}
 /*
 ========================================================================
 //Randomizes a value where 0<value<1

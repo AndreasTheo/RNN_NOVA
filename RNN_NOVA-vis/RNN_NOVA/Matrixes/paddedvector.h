@@ -15,30 +15,15 @@ template<class T>
 class PaddedVector {
 
 public:
-	//||DEFAULTS||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	//||DEFAULTS||
 	PaddedVector<T>(const PaddedVector&) = default;               // copy constructor
 	PaddedVector<T>(PaddedVector&&) = default;                     // move constructor
 	PaddedVector<T>& operator=(const PaddedVector&) & = default;  // copy assignment operator
 	PaddedVector<T>& operator=(PaddedVector&&) & = default;       // move assignment operator
-	virtual ~PaddedVector<T>() {
-		try {
-			if (_dataP)
-			{
-				_aligned_free(_dataP);
-			}
-		}
-		catch (int err) {
-			cerr << "Failed to deconstruct matrixes \n";
-			cerr << err << '\n';
-		}
-
-	} // destructor
+	virtual ~PaddedVector<T>(); // destructor
 	PaddedVector<T>(const int); // constructor
 	PaddedVector<T>(); // constructor
 
-	int size() const { return _cols; }
-	int cols() const { return _cols; }
-	int colsPadded() const { return _colsPadded; }
 	//Vector Initialization Functions
 	void InitVec(const intptr_t c)
 	{
@@ -80,17 +65,18 @@ public:
 
 	}
 	void ZerizeVector();
-	//void Name(std::string n) { name = n; }
 
 	//Data Access Functions
-	//T& operator()(const int r, const  int c);
-	//T operator()(const int r, const  int c) const;
 	T& operator[](const int c) const;
 	T& operator[](intptr_t c) const;
-	//double operator[](const int r) const;
-	void PrintVector();
+	int size() const { return _cols; }
+	int cols() const { return _cols; }
+	int colsPadded() const { return _colsPadded; }
 
-	//storage and info
+	//Informative Functions
+	void PrintVector();
+	//void Name(std::string n) { name = n; }
+
 private:
 	T* _dataP; //vector
 	intptr_t _cols;
@@ -109,7 +95,7 @@ inline T& PaddedVector<T>::operator[](intptr_t c) const {
 }
 /*
 ========================================================================
-//Constructor
+//Constructor(s) & Destructor
 ========================================================================
 */
 template<class T>
@@ -119,6 +105,21 @@ template<class T>
 PaddedVector<T>::PaddedVector(const int c) {
 	InitVec(c);
 }
+template<class T>
+PaddedVector<T>::~PaddedVector() {
+	try {
+		if (_dataP)
+		{
+			_aligned_free(_dataP);
+		}
+	}
+	catch (int err) {
+		cerr << "Failed to deconstruct matrixes \n";
+		cerr << err << '\n';
+	}
+
+}
+
 template<class T>
 inline void PaddedVector<T>::ZerizeVector() {
 	try {

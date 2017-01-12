@@ -49,7 +49,7 @@ void LSTMNeuralNetwork(Object^ data) {
 			tempError = lstm.VisNetErrorData();
 			vector<vector<double>> arr = lstm.VisNetOutputData();
 			ob->DrawPointsC1and2_Invoke(c, tempError,arr);
-			if (c % 100 == 0) //visualize the starting outputs slowly
+			if (c % 100 == 0)
 			{
 				sleepcp(100);
 			}

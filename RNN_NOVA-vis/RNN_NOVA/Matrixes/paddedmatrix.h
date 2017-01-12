@@ -16,7 +16,7 @@ template<class T>
 class PaddedMatrix {
 
 public:
-	//||DEFAULTS||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	//||DEFAULTS||
 	PaddedMatrix<T>(const PaddedMatrix&) = default;               // copy constructor
 	PaddedMatrix<T>(PaddedMatrix&&) = default;                     // move constructor
 	PaddedMatrix<T>& operator=(const PaddedMatrix&) & = default;  // copy assignment operator
@@ -24,15 +24,11 @@ public:
 	PaddedMatrix<T>(const int, const int); // constructor
 	PaddedMatrix<T>(); // constructor
 	~PaddedMatrix<T>(); // destructor
-	int size() const { return _rows * _cols; }
-	int rows() const { return _rows; }
-	int cols() const { return _cols; }
-	int rowsPadded() const { return _rowsPadded; }
-	int colsPadded() const { return _colsPadded; }
+
 	//Matrix Initialization Functions
 	void InitMatrix(const intptr_t r, const intptr_t c)
 	{
-		//Exception Handling for dimensions less than 1
+		//Exception Handling for dimensions less than 1x1
 		try {
 
 			if (r < 1 || c < 1)
@@ -80,19 +76,25 @@ public:
 
 	}
 	void ZerizeMatrix();
-	//void Name(std::string n) { name = n; }
-
 
 	//Data Access Functions
 	T* operator[](const int r);
 	T* operator[](intptr_t r);
-	void PrintMatrix();
+	int size() const { return _rows * _cols; }
+	int rows() const { return _rows; }
+	int cols() const { return _cols; }
+	int rowsPadded() const { return _rowsPadded; }
+	int colsPadded() const { return _colsPadded; }
 
 	//Calculation Functions
 	void Mult_Tranpose_Mat_Vec(double vec[], double res[]);
 	void CacheOblivTranpose(const int rb, const int re, const int cb, const int ce);
 
-	//storage and info
+	//Informative Functions
+	void PrintMatrix();
+	//void Name(std::string n) { name = n; }
+
+
 private:
 	T* _dataP; //matrix
 	intptr_t _rows, _cols;
@@ -112,7 +114,7 @@ inline T* PaddedMatrix<T>::operator[](intptr_t r) {
 
 /*
 ========================================================================
-//Constructor
+//Constructor(s) & Destructor
 ========================================================================
 */
 template<class T>

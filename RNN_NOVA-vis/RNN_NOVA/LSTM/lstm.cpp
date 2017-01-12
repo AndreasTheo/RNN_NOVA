@@ -16,7 +16,6 @@
 using namespace std;
 
 	int			 t = 1; //current network's time counter
-	long double	 recentAvgError = 0.5; //start RAE at a neutral error value, 0 < RAE < 1; 
 	const int    tS = 32*8; //timeSteps  (based on data & run params)
 	bool         allowDHNext = false;
 	bool         readNetOutputs = true;
@@ -32,10 +31,9 @@ using namespace std;
 	__declspec(align(16)) double* oG_pHWh;
 	__declspec(align(16)) double* fG_xInWx;
 	__declspec(align(16)) double* fG_pHWh;
-//Network layers
-__declspec(align(16)) double errorAtT[tS] = { 0 };
-//
-DataProcessing dProcessing;
+	__declspec(align(16)) double errorAtT[tS] = { 0 };
+
+	DataProcessing dProcessing;
 
 
 
@@ -54,12 +52,14 @@ lFType (loss function at y layer): mse/crossentropy
 */
 void LSTM::initNet(double eta ,double alpha ,int adaptGrad ,double rAESmoothing ,double wSV ,int weightInitType ,std::string yAFType ,std::string lFType) {
 	try {
+		res4.InitVec(hL);
+
 		//Network Layer
 		iNOut.InitMatrix(tS, iL);
 		lstmBlocks.InitMatrix(tS, hL);
 		hNOut.InitMatrix(tS, hL);
 		oNOut.InitMatrix(tS, oL);
-		////Weight Matrices & Result Vectors
+		//Weight Matrices & Result Vectors
 		oH.InitMatrix(oL, hL);	 
 		cellWX.InitMatrix(hL, iL); 
 		cellWH.InitMatrix(hL, hL);
@@ -69,21 +69,15 @@ void LSTM::initNet(double eta ,double alpha ,int adaptGrad ,double rAESmoothing 
 		oGWH.InitMatrix(hL, hL);  
 		fGWX.InitMatrix(hL, iL);
 		fGWH.InitMatrix(hL, hL); 
-		////////////////////////////////////////
-		res4.InitVec(hL);
-		////////////////////////////////////////
-		//////Gradients
+		//Gradients
 		oNGrad.InitMatrix(tS, oL);
 		dHGrad.InitVec(hL);
-		//////LSTMBlock gradients
+		//LSTMBlock gradients
 		hNGrad.InitMatrix(tS, hL);
 		cell_Grad.InitVec(hL);
 		iG_Grad.InitVec(hL);
 		oG_Grad.InitVec(hL);
 		fG_Grad.InitVec(hL);
-
-
-
 
 	//net parameters
 	net_Params.eta = eta;
@@ -94,8 +88,6 @@ void LSTM::initNet(double eta ,double alpha ,int adaptGrad ,double rAESmoothing 
 	net_Params.weightInitType = weightInitType;
 	net_Params.yAFType = yAFType;
 	net_Params.lFType = lFType;
-
-	
 
 		for (intptr_t cT = 0; cT < tS; cT++)
 		{
@@ -199,12 +191,12 @@ void LSTM::FeedForward(double* input, int length) {
 	}
 	//LSTMBlock to Output layer Connections
 	res3 = oH.Mult_Mat_Vec_NxM_Mx1(hNOut[t]);
-	double* oHRes = AF(res3, oL, &net_Params.yAFType);
+	double* oH_AF_Res = AF(res3, oL, &net_Params.yAFType);
 	for (intptr_t n = 0; n < (oL); n++)
 	{
-		oNOut[t][n] = oHRes[n];
+		oNOut[t][n] = oH_AF_Res[n];
 	}
-	free(oHRes);
+	free(oH_AF_Res);
 	_aligned_free(res3);
 	_aligned_free(cell_xInWx);
 	_aligned_free(cell_pHWh);
@@ -296,60 +288,6 @@ void LSTM::BackProp(double* target) {
 
 /*
 ================================================
-Net Info
-================================================
-*/
-void LSTM::NetInfo(bool readNetOutputs, bool readOutputGrads,bool readLSTMBlocks) {
-
-	try {
-		cout << "__________________________________________________" << '\n';
-
-		if (readNetOutputs)
-		{
-			cout << '\n' << "o layer outputs: " << '\n';
-			for (intptr_t cT = 0; cT < tS; cT++)
-			{
-				cout << "curTime: " << cT << " ------------------" << '\n';
-				for (int i = 0; i < (oL - 1);i++)
-				{
-					cout << "target: " << std::setprecision(17) << outputData[cT][i] << '\n';
-					cout << "output: " << std::setprecision(17) << oNOut[cT][i] << '\n';
-					cout << "error: " << std::setprecision(17) << errorAtT[cT] << '\n';
-
-					cout << "__" << '\n';
-				}
-			}
-		}
-		if (readOutputGrads)
-		{
-				cout << '\n' << "o layer Grads: " << '\n';
-			for (int i = 0; i < (oL - 1);i++)
-			{
-
-				for (intptr_t cT = 0; cT < tS; cT++)
-				{
-					cout << "curTime: " << cT << " ------------------" << '\n';
-					cout << "oGrad: " << std::setprecision(17) << oNGrad[cT][i] << '\n';
-					cout << '\n';
-				}
-
-				cout << "__" << '\n';
-			}
-		}
-
-		cout << "__________________________________________________" << '\n';
-	}
-	catch (int err) {
-		cerr << "Failed to produce network information! \n";
-		cerr << err << '\n';
-	}
-
-
-}
-
-
-/*
-================================================
 Update Weights
 ================================================
 */
@@ -388,13 +326,9 @@ void LSTM::ResetdHNextGrads() {
 Run
 ================================================
 */
-//#pragma unmanaged(push,off) //To prevent the code from running as managed code when called from clr (used for graphs).
 void LSTM::Run(int epochs) {
 
 	//cout << "Running net: " << '\n';
-
-	//clock_t t1, t2;
-	//t1 = clock();
 	//Process
 		for (intptr_t i = 0; i < epochs; i++)
 		{
@@ -416,11 +350,6 @@ void LSTM::Run(int epochs) {
 			UpdateWeights();
 			ResetdHNextGrads();
 		}
-	//NetInfo(readNetArray[0], readNetArray[1], readNetArray[2]);
-	//t2 = clock();
-	//double diff((double)t2 - (double)t1);
-	//cout << "time: " << (diff / (double)CLOCKS_PER_SEC) << endl;
-		
 }
 
 /*
@@ -517,4 +446,51 @@ void LSTM::InitData() {
 	delete[] oWave;
 	delete[] iWaveRes;
 	delete[] oWaveRes;
+}
+
+/*
+================================================
+Net Info
+================================================
+*/
+void LSTM::NetInfo(bool readNetOutputs, bool readOutputGrads, bool readLSTMBlocks) {
+
+	try {
+		cout << "__________________________________________________" << '\n';
+		if (readNetOutputs)
+		{
+			cout << '\n' << "o layer outputs: " << '\n';
+			for (intptr_t cT = 0; cT < tS; cT++)
+			{
+				cout << "curTime: " << cT << " ------------------" << '\n';
+				for (int i = 0; i < (oL - 1);i++)
+				{
+					cout << "target: " << std::setprecision(17) << outputData[cT][i] << '\n';
+					cout << "output: " << std::setprecision(17) << oNOut[cT][i] << '\n';
+					cout << "error: " << std::setprecision(17) << errorAtT[cT] << '\n';
+					cout << "__" << '\n';
+				}
+			}
+		}
+		if (readOutputGrads)
+		{
+			cout << '\n' << "o layer Grads: " << '\n';
+			for (int i = 0; i < (oL - 1);i++)
+			{
+				for (intptr_t cT = 0; cT < tS; cT++)
+				{
+					cout << "curTime: " << cT << " ------------------" << '\n';
+					cout << "oGrad: " << std::setprecision(17) << oNGrad[cT][i] << '\n';
+					cout << '\n';
+				}
+				cout << "__" << '\n';
+			}
+		}
+
+		cout << "__________________________________________________" << '\n';
+	}
+	catch (int err) {
+		cerr << "Failed to produce network information! \n";
+		cerr << err << '\n';
+	}
 }

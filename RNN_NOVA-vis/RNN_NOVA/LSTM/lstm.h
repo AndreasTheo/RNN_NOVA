@@ -30,21 +30,21 @@ private:
 	WeightMatrix<double> oGWH;
 	WeightMatrix<double> fGWX;
 	WeightMatrix<double> fGWH;
-	////Results (used temporarily)
-	PaddedVector<double> res4;
-	////Gradients
+	//Gradients
 	PaddedMatrix<double> oNGrad;
 	PaddedVector<double> dHGrad;
-	////LSTMBlock gradients
+	//LSTMBlock gradients
 	PaddedMatrix<double> hNGrad;
 	PaddedVector<double> cell_Grad;
 	PaddedVector<double> iG_Grad;
 	PaddedVector<double> oG_Grad;
 	PaddedVector<double> fG_Grad;
-	////////////////////////////////////
+	//Data
 	PaddedMatrix<double> inputData;
 	PaddedMatrix<double> outputData;
-	//////////////////////////////////
+	//Results (used temporarily)
+	PaddedVector<double> res4;
+
 	struct Net_Params {
 		int          epochs;
 		double	     eta;
@@ -72,7 +72,7 @@ public:
 	vector<vector<double>> VisNetOutputData();
 	vector<vector<double>> VisOutputData();
 	LSTM::LSTM() {}
-	virtual LSTM::~LSTM() { cout << "LSTM Deconstructor"; };
+	virtual LSTM::~LSTM() { cout << "LSTM Destructor"; };
 };
 
 
