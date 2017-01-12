@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MyForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RNN_NOVA\Activation_Functions\sigmoid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RNN_NOVA\Activation_Functions\softmax.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RNN_NOVA\Activation_Functions\tanh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RNN_NOVA\LSTM\lstm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RNN_NOVA\Math\gradient_checking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RNN_NOVA\Neuron\lstm_block.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RNN_NOVA\WeightMatrix\optimizers\adagrad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RNN_NOVA\WeightMatrix\mult_mat_vec.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RNN_NOVA\WeightMatrix\mult_tranpose_mat_vec.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RNN_NOVA\WeightMatrix\update_weights.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MyForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Activation_Functions\af_directory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Activation_Functions\sigmoid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Activation_Functions\softmax.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Activation_Functions\tanh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Loss_Functions\other\hellinger_distance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Loss_Functions\other\Itakura_Saito_distance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Loss_Functions\other\Kullback_Leibler_divergence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Loss_Functions\cross_entropy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Loss_Functions\exponentional.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Loss_Functions\lf_directory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Loss_Functions\mse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Loss_Functions\quadratic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\LSTM\lstm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Math\gradient_checking.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\Neuron\lstm_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\WeightMatrix\weightmatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNN_NOVA\networkparameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
